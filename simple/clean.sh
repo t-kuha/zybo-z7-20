@@ -5,4 +5,4 @@ rm -rf .Xil
 
 rm -f *.log
 rm -f *.jou
-rm -f *.dsa
+rm -f petalinux/*.dsa
