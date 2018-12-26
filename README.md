@@ -41,6 +41,9 @@ petalinux-config --project ${PRJ_NAME} --get-hw-description
 petalinux-config --project ${PRJ_NAME} -c kernel
 petalinux-config --project ${PRJ_NAME} -c rootfs
 
+# Add sds_lib
+petalinux-create --project ${PRJ_NAME} -t apps --template install --name sdslib --enable
+
 # Build project
 petalinux-build --project ${PRJ_NAME}
 ```
