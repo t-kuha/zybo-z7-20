@@ -3,6 +3,6 @@
 rmdir /S /Q vivado
 rmdir /S /Q .Xil
 
-rm *.jou
-rm *.log
-rm *.dsa
+del *.jou
+del *.log
+del petalinux\\*.dsa
