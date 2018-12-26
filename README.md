@@ -42,5 +42,5 @@ petalinux-config --project ${PRJ_NAME} -c kernel
 petalinux-config --project ${PRJ_NAME} -c rootfs
 
 # Build project
-petalinux-build
+petalinux-build --project ${PRJ_NAME}
 ```
