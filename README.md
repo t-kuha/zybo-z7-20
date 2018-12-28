@@ -10,13 +10,21 @@ Xilinx SDSoC / HLS projects for ZYbo Z7-20 board
 ### How to create platform
 
 ```bash
-cd simple
+$ cd simple
 
 # Create Vivado project
-vivado -mode batch -source create_vivado_project.tcl
+$ vivado -mode batch -source create_vivado_project.tcl
 
+# Build PetaLinux
+$ cd petalinux
+$ petalinux-build --project z7_20
 ```
 
+- Generate platform
+
+    - Open SDSoC GUI
+
+    - 
 
 ***
 ### How to create Petalinux project
