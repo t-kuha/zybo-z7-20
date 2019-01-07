@@ -12,10 +12,10 @@ $ git checkout 69dbafb
 $ cd ..
 
 # Create Vivado project
-
+$ vivado -mode batch -source create_vivado_project.tcl
 
 # Make SDK app to initialize PS
-
+$ source create_boot_bin.tcl
 ```
 
 
