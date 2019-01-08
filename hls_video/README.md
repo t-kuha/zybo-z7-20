@@ -1,8 +1,19 @@
-## hls_video
-
+# hls_video
 
 ***
-### How to build the project
+
+## How to build the project
+
+- First, build HLS IP:
+
+```bash
+# In batch mode
+$ vivado_hls -f build_hls_pattern_gen_axis.tcl
+```
+
+- Extract _.zip_ into _hls/ip/petten_gen_axis_
+
+- Then, generate Vivado project, SW, and BOOT.bin
 
 ```bash
 # Get DVI2RGB/RGB2DVI IPs from Digilent's git
@@ -18,7 +29,6 @@ $ vivado -mode batch -source create_vivado_project.tcl
 $ source create_boot_bin.tcl
 ```
 
+## Run
 
-***
-### 
-
+- Copy BOOT.bin into SD Card and power up the board
