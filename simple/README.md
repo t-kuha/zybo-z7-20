@@ -1,6 +1,6 @@
-## simple
+# simple
 
-### How to create platform
+## How to create platform
 
 ```bash
 $ cd simple
@@ -15,19 +15,15 @@ $ petalinux-build --project z7_20
 
 - Generate platform
 
-    - Open SDSoC GUI
-
-    - 
+  - Open SDSoC GUI
 
 ***
 ### How to create Petalinux project
 
-- Refer to 
+- Refer to:
+  - UG1146: "SDSoC Environment Platform Development Guide"
 
-    - UG1146: "SDSoC Environment Platform Development Guide"
-
-    - UG1144: "PetaLinux Tools Documentation"
-
+  - UG1144: "PetaLinux Tools Documentation"
 
 ```bash
 cd petalinux
