@@ -11,7 +11,7 @@
 $ vivado_hls -f build_hls_pattern_gen_axis.tcl
 ```
 
-- Extract _.zip_ into _hls/ip/petten_gen_axis_
+- Extract _hls_petten_gen_axis/solution1/impl/ip/xilinx_com_hls_petten_gen_axis_1_0.zip_ into _hls/ip/petten_gen_axis_
 
 - Then, generate Vivado project, SW, and BOOT.bin
 
