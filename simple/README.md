@@ -42,8 +42,8 @@ $ xsct create_sdsoc_pfm.tcl
 ```bash
 $ mkdir _prj_init
 $ cd _prj_init
-$ sdscc ../src/hello_world.c -c -o hello_world.o -sds-pf ../platform/u96_base/export/u96_base -sds-sys-config linux -target-os linux
-$ sdscc hello_world.o -o hello_world.elf -sds-pf ../platform/u96_base/export/u96_base -sds-sys-config linux -target-os linux
+$ sdscc ../src/hello_world.c -c -o hello_world.o -sds-pf ../_platform_init/z7_20/export/z7_20 -sds-sys-config linux -target-os linux
+$ sdscc hello_world.o -o hello_world.elf -sds-pf ../_platform_init/z7_20/export/z7_20 -sds-sys-config linux -target-os linux
 ```
 
 - Copy prebuilt data
@@ -54,7 +54,7 @@ $ mkdir pfm_files/prebuilt
 # system.bit file should be renamed to bitstream.bit
 $ cp _prj_init/_sds/p0/vpl/system.bit    pfm_files/prebuilt/bitstream.bit
 # system.hdf file should be renamed to <platform>.hdf
-$ cp _prj_init/_sds/p0/vpl/system.hdf    pfm_files/prebuilt/u96_base.hdf
+$ cp _prj_init/_sds/p0/vpl/system.hdf    pfm_files/prebuilt/z7_20.hdf
 $ cp _prj_init/_sds/.llvm/partitions.xml pfm_files/prebuilt
 $ cp _prj_init/_sds/.llvm/apsys_0.xml    pfm_files/prebuilt
 $ cp _prj_init/_sds/swstubs/portinfo.c   pfm_files/prebuilt
