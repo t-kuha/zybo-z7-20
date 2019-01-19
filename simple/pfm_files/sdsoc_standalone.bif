@@ -1,4 +1,4 @@
-// standalone
+//arch = zynq; split = false; format = BIN
 the_ROM_image:
 {
   [bootloader]<zynq_fsbl.elf>
