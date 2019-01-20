@@ -17,7 +17,8 @@ $ vivado -mode batch -source create_vivado_project.tcl
 
 ```bash
 $ cd petalinux
-$ petalinux-build --project z7_20
+$ petalinux-create -t project -s z7_20
+$ petalinux-build -p z7_20
 ```
 
 ### Generate platform (w/o prebuilt data)
