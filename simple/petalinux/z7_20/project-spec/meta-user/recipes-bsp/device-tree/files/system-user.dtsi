@@ -1,6 +1,34 @@
 /include/ "system-conf.dtsi"
 / {
+	usb_phy0: usb_phy@0 {
+		compatible = "ulpi-phy";
+		#phy-cells = <0>;
+		reg = <0xe0002000 0x1000>;
+		view-port = <0x0170>;
+		drv-vbus;
+	};
+
 	xlnk {
 		compatible = "xlnx,xlnk-1.0";
 	};
+};
+
+&gem0 {
+	phy-handle = <&ethernet_phy>;
+/*	phy-reset-gpio = <&axi_gpio_eth 0 0>;
+	phy-reset-active-low;
+	phy-reset-duration = <10>; */
+	ethernet_phy: ethernet-phy@1 { /* rtl8211e-vl */
+		reg = <1>;
+		device_type = "ethernet-phy";
+	};
+};
+
+&usb0 {
+	dr_mode = "host";
+	usb-phy = <&usb_phy0>;
+};
+
+&sdhci0 {
+	u-boot,dm-pre-reloc;
 };
