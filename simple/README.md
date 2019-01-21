@@ -64,6 +64,8 @@ $ cp _prj_init/_sds/swstubs/portinfo.h   pfm_files/prebuilt
 
 ### Create final platform (with pre-built HW)
 
+- Use xsct in SDx directory (not the one in XSDK directory)
+
 ```bash
 $ xsct create_sdsoc_pfm.tcl
 ```
@@ -96,5 +98,5 @@ petalinux-build --project ${PRJ_NAME}
 
 ## Reference
 
-  - UG1146: "SDSoC Environment Platform Development Guide"
-  - UG1144: "PetaLinux Tools Documentation"
+- UG1146: "SDSoC Environment Platform Development Guide"
+- UG1144: "PetaLinux Tools Documentation"
