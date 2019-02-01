@@ -1,0 +1,7 @@
+// BIF file for Linux image
+the_ROM_image:
+{
+  [bootloader]prj/images/linux/zynq_fsbl.elf
+  _vivado/hw.runs/impl_1/hw_wrapper.bit
+  prj/images/linux/u-boot.elf
+}
