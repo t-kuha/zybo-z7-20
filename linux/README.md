@@ -23,7 +23,7 @@ $ vivado -mode batch -source create_vivado_project.tcl
 
 ```bash
 $ export PRJ_NAME=prj
-$ petalinux-create -t project -n ${PRJ_NAME} --template zynqMP
+$ petalinux-create -t project -n ${PRJ_NAME} --template zynq
 $ petalinux-config -p ${PRJ_NAME} --get-hw-description=.
 
 # Kernel config
@@ -47,14 +47,12 @@ $ petalinux-build --sdk -p ${PRJ_NAME}
 ## Generate BOOT.bin
 
 ```bash
-$ bootgen -arch zynqmp -image src/boot_bin_linux.bif -w -o BOOT.bin
+$ bootgen -arch zynq -image src/boot_bin_linux.bif -w -o BOOT.bin
 # or ...
 $ petalinux-package -p ${PRJ_NAME} --boot --format BIN \
-> --fsbl ${PRJ_NAME}/images/linux/zynqmp_fsbl.elf \
+> --fsbl ${PRJ_NAME}/images/linux/zynq_fsbl.elf \
 > --u-boot ${PRJ_NAME}/images/linux/u-boot.elf \
-> --pmufw ${PRJ_NAME}/images/linux/pmufw.elf \
-> --fpga _vivado/hw.runs/impl_1/hw_wrapper.bit \
-> --atf ${PRJ_NAME}/images/linux/bl31.elf
+> --fpga _vivado/hw.runs/impl_1/hw_wrapper.bit
 # BOOT.BIN is in ${PRJ_NAME}/images/linux/
 ```
 
