@@ -51,8 +51,10 @@ open_run impl_1
 report_utilization -name utilization_1
 report_clocks
 
-# Export .hdf file
-write_hwdef -force -file _system.hdf
+# Export .hdf file - including bitstream
+file copy -force ${PRJ_DIR}/${PRJ_NAME}.runs/impl_1/${PRJ_NAME}_wrapper.sysdef _system.hdf
+# Without bitstream
+# write_hwdef -force -file _system.hdf
 
 # Finish - close project
 close_project
