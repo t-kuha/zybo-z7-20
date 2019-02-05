@@ -52,7 +52,9 @@ $ bootgen -arch zynq -image src/boot_bin_linux.bif -w -o BOOT.bin
 $ petalinux-package -p ${PRJ_NAME} --boot --format BIN \
 > --fsbl ${PRJ_NAME}/images/linux/zynq_fsbl.elf \
 > --u-boot ${PRJ_NAME}/images/linux/u-boot.elf \
-> --fpga _vivado/hw.runs/impl_1/hw_wrapper.bit
+> --fpga ${PRJ_NAME}/project-spec/hw-description/z7_20_wrapper.bit
+# or ...
+# > --fpga _vivado/z7_20.runs/impl_1/z7_20_wrapper.bit
 # BOOT.BIN is in ${PRJ_NAME}/images/linux/
 ```
 
@@ -74,8 +76,8 @@ $ petalinux-package -p ${PRJ_NAME} --boot --format BIN \
 # Collect prebuilt image
 $ cd ${PRJ_NAME}
 $ petalinux-package --prebuilt
-# Run Linux Kernel
-$ cp ../src/pmu_rom_qemu_sha3.elf pre-built/linux/images/
+
+# Run Linux Kernel on QEMU
 $ petalinux-boot --qemu --kernel
 ```
 
@@ -88,15 +90,8 @@ $ petalinux-boot --qemu --kernel
     ```bash
     $ petalinux-create -p ${PRJ_NAME} -t apps --template install --name sdslib --enable
     $ rm ${PRJ_NAME}/project-spec/meta-user/recipes-apps/sdslib/files/sdslib
-    $ cp -R ${XILINX_SDX}/target/aarch64-linux/lib/libsds_lib*.so ${PRJ_NAME}/project-spec/meta-user/recipes-apps/sdslib/files
+    $ cp -R ${XILINX_SDX}/target/aarch32-linux/lib/libsds_lib*.so ${PRJ_NAME}/project-spec/meta-user/recipes-apps/sdslib/files
 
     # Edit .bb file
     $ nano ${PRJ_NAME}/project-spec/meta-user/recipes-apps/sdslib/sdslib.bb
     ```
-
-- Where to get constraint file (ultra96v1_petalinux.xdc): [https://github.com/Avnet/hdl/blob/master/Projects/ultra96v1_petalinux/ultra96v1_petalinux.xdc](https://github.com/Avnet/hdl/blob/master/Projects/ultra96v1_petalinux/ultra96v1_petalinux.xdc)
-
-- Where to get pmu_rom_qemu_sha3.elf
-  - Download PetaLinux BSP from Xilinx website
-  - Untar the BSP
-  - pmu_rom_qemu_sha3.elf is in pre-built/linux/images/
