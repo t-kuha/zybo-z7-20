@@ -1,6 +1,6 @@
 # Setting
 set PRJ_DIR     _vivado
-set PRJ_NAME    hw
+set PRJ_NAME    z7_20
 set BD_NAME     ${PRJ_NAME}
 set SRC_DIR     src
 set NUM_JOBS    4
@@ -11,11 +11,11 @@ create_project ${PRJ_NAME} ${PRJ_DIR} -part xc7z020clg400-1
 set_property board_part digilentinc.com:zybo-z7-20:part0:1.0 [current_project]
 
 # Add constraint file
-# add_files -fileset constrs_1 -norecurse ${SRC_DIR}/ultra96v1_petalinux.xdc
-# import_files -fileset constrs_1 ${SRC_DIR}/ultra96v1_petalinux.xdc
+add_files -fileset constrs_1 -norecurse ${SRC_DIR}/Zybo-Z7-Master.xdc
+import_files -fileset constrs_1 ${SRC_DIR}/Zybo-Z7-Master.xdc
 
 # Set IP repository paths
-set IP_REPOS  [ format "ip vivado-library" ] 
+set IP_REPOS { "src/ip" "vivado-library" } 
 set_property  ip_repo_paths  ${IP_REPOS}  [current_project]
 update_ip_catalog
 
