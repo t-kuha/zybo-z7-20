@@ -96,6 +96,66 @@ petalinux-build --project ${PRJ_NAME}
 
 ***
 
+## Run conformance test
+
+- Copy source code of comformance test from _< SDX installation directory >/samples/platforms/Conformance_
+
+```bash
+# Build comformance test
+$ make PLATFORM=../platform/z7_20 OS=LINUX PLATFORM_TYPE=ZYNQ
+```
+
+- Run built project
+
+```bash
+root@z7_20:~# /run/media/mmcblk0p1/ConformanceTest.elf
+Starting allocation tests from 65536 to 67108864 with increment 524288
+done
+Starting datamover tests....
+Running test <axi_dma_simple, ACP, sds_alloc>
+    using Index=1/114687, data size=64-7340032, Allocation=SDS Alloc, Unvalidated
+ Complete
+Running test <zero_copy, ACP, sds_alloc>
+    using Index=1/262143, data size=64-16777216, Allocation=SDS Alloc, Unvalidated
+ Complete
+Running test <axi_dma_sg, ACP, malloc>
+    using Index=1/262143, data size=64-16777216, Allocation=User new, Unvalidated
+ Complete
+Running test <axi_dma_sg, ACP, sds_alloc>
+    using Index=1/262143, data size=64-16777216, Allocation=SDS Alloc, Unvalidated
+ Complete
+Running test <axi_dma_simple, HP, sds_alloc>
+    using Index=1/114687, data size=64-7340032, Allocation=SDS Alloc, Unvalidated
+ Complete
+Running test <axi_dma_simple, HP, sds_alloc_noncacheable>
+    using Index=1/114687, data size=64-7340032, Allocation=SDS Alloc (non-cacheable), Unvalidated
+ Complete
+Running test <zero_copy, HP, sds_alloc>
+    using Index=1/262143, data size=64-16777216, Allocation=SDS Alloc, Unvalidated
+ Complete
+Running test <zero_copy, HP, sds_alloc_noncacheable>
+    using Index=1/262143, data size=64-16777216, Allocation=SDS Alloc (non-cacheable), Unvalidated
+ Complete
+Running test <axi_dma_sg, HP, malloc>
+    using Index=1/262143, data size=64-16777216, Allocation=User new, Unvalidated
+ Complete
+Running test <axi_dma_sg, HP, sds_alloc>
+    using Index=1/262143, data size=64-16777216, Allocation=SDS Alloc, Unvalidated
+ Complete
+Running test <axi_dma_sg, HP, sds_alloc_noncacheable>
+    using Index=1/262143, data size=64-16777216, Allocation=SDS Alloc (non-cacheable), Unvalidated
+ Complete
+Running test <axi_fifo, NONE, NONE>
+    using Index=1/31, data size=64-2048, Allocation=User new, Unvalidated
+ Complete
+Datamover Testing complete.
+Testing clocks
+Clock tests complete.
+Test passed
+```
+
+***
+
 ## Reference
 
 - UG1146: "SDSoC Environment Platform Development Guide"
