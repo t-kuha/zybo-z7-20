@@ -1,7 +1,9 @@
 #!/bin/sh
 
-rm *.jou
-rm *.log
+rm -f *.jou
+rm -f *.log
+rm -f _system.hdf
 
-rm -r _vivado
+rm -rf _vivado
+rm -rf prj/images
 
