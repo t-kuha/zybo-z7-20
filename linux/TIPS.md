@@ -21,6 +21,6 @@ root@zybo-z7:/sys/class/gpio# echo 913 > unexport
 
 ## If the state of PS push buttons (BTN4 & 5) does not change...
 
-- Change the pullup field to "Disabled" in Vivado
+- Change the pullup field of MIO 50 & 51 to "Disabled" in Vivado
 
 - [Reference](https://forum.digilentinc.com/topic/3614-accessing-ps-mio-led-and-2-push-buttons/)
