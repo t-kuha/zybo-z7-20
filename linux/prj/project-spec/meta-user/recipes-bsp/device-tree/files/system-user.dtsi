@@ -1,17 +1,27 @@
+#include <dt-bindings/gpio/gpio.h>
+
 /include/ "system-conf.dtsi"
 / {
 	model = "Zynq Zybo Z7-20 Development Board";
 
-  xlnk {
+	xlnk {
 		compatible = "xlnx,xlnk-1.0";
 	};
- 	
-  usb_phy0: usb_phy@0 {
+
+	usb_phy0: usb_phy@0 {
 		compatible = "ulpi-phy";
 		#phy-cells = <0>;
 		reg = <0xe0002000 0x1000>;
 		view-port = <0x0170>;
 		drv-vbus;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+		ld4 {
+			label = "LD4";
+			gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
+		};
 	};
 };
 
@@ -19,3 +29,4 @@
 	dr_mode = "host";
 	usb-phy = <&usb_phy0>;
 };
+
