@@ -4,6 +4,10 @@
 / {
 	model = "Zynq Zybo Z7-20 Development Board";
 
+	chosen {
+		bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rw rootwait rootfstype=ext4";
+	};
+
 	xlnk {
 		compatible = "xlnx,xlnk-1.0";
 	};
