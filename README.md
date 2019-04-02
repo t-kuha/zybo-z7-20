@@ -8,4 +8,6 @@ Xilinx SDSoC / HLS projects for Zybo Z7-20 board [https://store.digilentinc.com/
 
 - __hls_video__: Video processing example in HLS (not SDSoC)
 
+- __linux__: Linux (SDSoC capable)
+
 - __simple__: Simple SDSoC platform
