@@ -8,14 +8,14 @@
 
 ### Create HW in Vivado
 
-```bash
+```shell-session
 # Create Vivado project
 $ vivado -mode batch -source create_vivado_project.tcl
 ```
 
 ### Build PetaLinux
 
-```bash
+```shell-session
 $ cd petalinux
 $ petalinux-create -t project -s z7_20
 $ petalinux-build -p z7_20
@@ -23,7 +23,7 @@ $ petalinux-build -p z7_20
 
 ### Generate platform (w/o prebuilt data)
 
-```bash
+```shell-session
 # Create directory for platform components
 $ mkdir pfm_files/boot pfm_files/image
 
@@ -40,16 +40,18 @@ $ xsct create_sdsoc_pfm.tcl
 
 - Build _hello_world_
 
-```bash
+```shell-session
 $ mkdir _prj_init
 $ cd _prj_init
-$ sdscc ../src/hello_world.c -c -o hello_world.o -sds-pf ../_platform_init/z7_20/export/z7_20 -sds-sys-config linux -target-os linux
-$ sdscc hello_world.o -o hello_world.elf -sds-pf ../_platform_init/z7_20/export/z7_20 -sds-sys-config linux -target-os linux
+$ sdscc ../src/hello_world.c -c -o hello_world.o \
+-sds-pf ../_platform_init/z7_20/export/z7_20 -sds-sys-config linux -target-os linux
+$ sdscc hello_world.o -o hello_world.elf \
+-sds-pf ../_platform_init/z7_20/export/z7_20 -sds-sys-config linux -target-os linux
 ```
 
 - Copy prebuilt data
 
-```bash
+```shell-session
 $ mkdir pfm_files/prebuilt
 
 # system.bit file should be renamed to bitstream.bit
@@ -66,7 +68,7 @@ $ cp _prj_init/_sds/swstubs/portinfo.h   pfm_files/prebuilt
 
 - Use xsct in SDx directory (not the one in XSDK directory)
 
-```bash
+```shell-session
 $ xsct create_sdsoc_pfm.tcl
 ```
 
@@ -74,7 +76,7 @@ $ xsct create_sdsoc_pfm.tcl
 
 ### How to create Petalinux project
 
-```bash
+```shell-session
 cd petalinux
 
 export PRJ_NAME=z7_20
@@ -100,14 +102,14 @@ petalinux-build --project ${PRJ_NAME}
 
 - Copy source code of comformance test from _< SDX installation directory >/samples/platforms/Conformance_
 
-```bash
+```shell-session
 # Build comformance test
 $ make PLATFORM=../platform/z7_20 OS=LINUX PLATFORM_TYPE=ZYNQ
 ```
 
 - Run built project
 
-```bash
+```shell-session
 root@z7_20:~# /run/media/mmcblk0p1/ConformanceTest.elf
 Starting allocation tests from 65536 to 67108864 with increment 524288
 done
