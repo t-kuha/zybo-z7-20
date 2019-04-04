@@ -1,11 +1,12 @@
 #include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/media/xilinx-vip.h>
 
 /include/ "system-conf.dtsi"
 / {
 	model = "Zynq Zybo Z7-20 Development Board";
 
 	chosen {
-		bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rw rootwait rootfstype=ext4";
+		bootargs = "console=ttyPS0,115200 earlyprintk root=/dev/mmcblk0p2 rw rootwait rootfstype=ext4 uio_pdrv_genirq.of_id=generic-uio";
 	};
 
 	xlnk {
@@ -34,3 +35,20 @@
 	usb-phy = <&usb_phy0>;
 };
 
+&v_tpg {
+	compatible = "generic-uio";
+
+	xlnx,max-height = <1080>;
+	xlnx,max-width = <2048>;
+//	xlnx,ppc = <1>;
+
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		port@0 {
+				reg = <0>;
+				xlnx,video-format = <XVIP_VF_RBG>;
+				xlnx,video-width = <8>;
+		};
+	};
+};

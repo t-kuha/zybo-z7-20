@@ -125,8 +125,14 @@ set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
 xilinx.com:ip:axi_gpio:2.0\
+xilinx.com:ip:clk_wiz:6.0\
 xilinx.com:ip:processing_system7:5.5\
+digilentinc.com:ip:rgb2dvi:1.4\
 xilinx.com:ip:proc_sys_reset:5.0\
+xilinx.com:ip:v_axi4s_vid_out:4.0\
+xilinx.com:ip:v_tc:6.1\
+xilinx.com:ip:v_tpg:8.0\
+xilinx.com:ip:xlconstant:1.1\
 "
 
    set list_ips_missing ""
@@ -193,14 +199,18 @@ proc create_root_design { parentCell } {
   set DDR [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:ddrx_rtl:1.0 DDR ]
   set FIXED_IO [ create_bd_intf_port -mode Master -vlnv xilinx.com:display_processing_system7:fixedio_rtl:1.0 FIXED_IO ]
   set btn [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 btn ]
+  set hdmi_tx [ create_bd_intf_port -mode Master -vlnv digilentinc.com:interface:tmds_rtl:1.0 hdmi_tx ]
   set led [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 led ]
   set sw [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 sw ]
 
   # Create ports
+  set hdmi_tx_hpd [ create_bd_port -dir O -from 0 -to 0 hdmi_tx_hpd ]
 
   # Create instance: axi_gpio_0, and set properties
   set axi_gpio_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0 ]
   set_property -dict [ list \
+   CONFIG.C_INTERRUPT_PRESENT {0} \
+   CONFIG.C_IS_DUAL {0} \
    CONFIG.GPIO_BOARD_INTERFACE {leds_4bits} \
    CONFIG.USE_BOARD_FLOW {true} \
  ] $axi_gpio_0
@@ -219,6 +229,24 @@ proc create_root_design { parentCell } {
    CONFIG.USE_BOARD_FLOW {true} \
  ] $axi_gpio_2
 
+  # Create instance: clk_wiz, and set properties
+  set clk_wiz [ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz ]
+  set_property -dict [ list \
+   CONFIG.CLKOUT1_JITTER {116.394} \
+   CONFIG.CLKOUT1_PHASE_ERROR {87.466} \
+   CONFIG.CLKOUT2_JITTER {108.254} \
+   CONFIG.CLKOUT2_PHASE_ERROR {87.466} \
+   CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {148.5} \
+   CONFIG.CLKOUT2_USED {true} \
+   CONFIG.MMCM_CLKFBOUT_MULT_F {11.875} \
+   CONFIG.MMCM_CLKOUT0_DIVIDE_F {11.875} \
+   CONFIG.MMCM_CLKOUT1_DIVIDE {8} \
+   CONFIG.MMCM_DIVCLK_DIVIDE {1} \
+   CONFIG.NUM_OUT_CLKS {2} \
+   CONFIG.RESET_PORT {resetn} \
+   CONFIG.RESET_TYPE {ACTIVE_LOW} \
+ ] $clk_wiz
+
   # Create instance: ps7, and set properties
   set ps7 [ create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 ps7 ]
   set_property -dict [ list \
@@ -227,7 +255,7 @@ proc create_root_design { parentCell } {
    CONFIG.PCW_ACT_DCI_PERIPHERAL_FREQMHZ {10.158730} \
    CONFIG.PCW_ACT_ENET0_PERIPHERAL_FREQMHZ {125.000000} \
    CONFIG.PCW_ACT_ENET1_PERIPHERAL_FREQMHZ {10.000000} \
-   CONFIG.PCW_ACT_FPGA0_PERIPHERAL_FREQMHZ {50.000000} \
+   CONFIG.PCW_ACT_FPGA0_PERIPHERAL_FREQMHZ {100.000000} \
    CONFIG.PCW_ACT_FPGA1_PERIPHERAL_FREQMHZ {10.000000} \
    CONFIG.PCW_ACT_FPGA2_PERIPHERAL_FREQMHZ {10.000000} \
    CONFIG.PCW_ACT_FPGA3_PERIPHERAL_FREQMHZ {10.000000} \
@@ -250,7 +278,7 @@ proc create_root_design { parentCell } {
    CONFIG.PCW_ARMPLL_CTRL_FBDIV {40} \
    CONFIG.PCW_CAN_PERIPHERAL_DIVISOR0 {1} \
    CONFIG.PCW_CAN_PERIPHERAL_DIVISOR1 {1} \
-   CONFIG.PCW_CLK0_FREQ {50000000} \
+   CONFIG.PCW_CLK0_FREQ {100000000} \
    CONFIG.PCW_CLK1_FREQ {10000000} \
    CONFIG.PCW_CLK2_FREQ {10000000} \
    CONFIG.PCW_CLK3_FREQ {10000000} \
@@ -303,13 +331,14 @@ proc create_root_design { parentCell } {
    CONFIG.PCW_EN_UART1 {1} \
    CONFIG.PCW_EN_USB0 {1} \
    CONFIG.PCW_FCLK0_PERIPHERAL_DIVISOR0 {5} \
-   CONFIG.PCW_FCLK0_PERIPHERAL_DIVISOR1 {4} \
+   CONFIG.PCW_FCLK0_PERIPHERAL_DIVISOR1 {2} \
    CONFIG.PCW_FCLK1_PERIPHERAL_DIVISOR0 {1} \
    CONFIG.PCW_FCLK1_PERIPHERAL_DIVISOR1 {1} \
    CONFIG.PCW_FCLK2_PERIPHERAL_DIVISOR0 {1} \
    CONFIG.PCW_FCLK2_PERIPHERAL_DIVISOR1 {1} \
    CONFIG.PCW_FCLK3_PERIPHERAL_DIVISOR0 {1} \
    CONFIG.PCW_FCLK3_PERIPHERAL_DIVISOR1 {1} \
+   CONFIG.PCW_FPGA0_PERIPHERAL_FREQMHZ {100} \
    CONFIG.PCW_FPGA_FCLK0_ENABLE {1} \
    CONFIG.PCW_FPGA_FCLK1_ENABLE {0} \
    CONFIG.PCW_FPGA_FCLK2_ENABLE {0} \
@@ -323,6 +352,7 @@ proc create_root_design { parentCell } {
    CONFIG.PCW_I2C_RESET_ENABLE {1} \
    CONFIG.PCW_IOPLL_CTRL_FBDIV {30} \
    CONFIG.PCW_IO_IO_PLL_FREQMHZ {1000.000} \
+   CONFIG.PCW_IRQ_F2P_INTR {1} \
    CONFIG.PCW_IRQ_F2P_MODE {DIRECT} \
    CONFIG.PCW_MIO_0_DIRECTION {inout} \
    CONFIG.PCW_MIO_0_IOTYPE {LVCMOS 3.3V} \
@@ -689,17 +719,69 @@ proc create_root_design { parentCell } {
    CONFIG.PCW_USB_RESET_SELECT {Share reset pin} \
    CONFIG.PCW_USE_AXI_NONSECURE {0} \
    CONFIG.PCW_USE_CROSS_TRIGGER {0} \
+   CONFIG.PCW_USE_FABRIC_INTERRUPT {1} \
    CONFIG.PCW_USE_M_AXI_GP0 {1} \
  ] $ps7
 
   # Create instance: ps7_axi_periph, and set properties
   set ps7_axi_periph [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 ps7_axi_periph ]
   set_property -dict [ list \
-   CONFIG.NUM_MI {3} \
+   CONFIG.NUM_MI {4} \
  ] $ps7_axi_periph
 
-  # Create instance: rst_ps7_50M, and set properties
-  set rst_ps7_50M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_ps7_50M ]
+  # Create instance: rgb2dvi, and set properties
+  set rgb2dvi [ create_bd_cell -type ip -vlnv digilentinc.com:ip:rgb2dvi:1.4 rgb2dvi ]
+  set_property -dict [ list \
+   CONFIG.kRstActiveHigh {false} \
+ ] $rgb2dvi
+
+  # Create instance: rst_100M, and set properties
+  set rst_100M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_100M ]
+
+  # Create instance: rst_video, and set properties
+  set rst_video [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_video ]
+
+  # Create instance: v_axi4s_vid_out_0, and set properties
+  set v_axi4s_vid_out_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_axi4s_vid_out:4.0 v_axi4s_vid_out_0 ]
+
+  # Create instance: v_tc_0, and set properties
+  set v_tc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_tc:6.1 v_tc_0 ]
+  set_property -dict [ list \
+   CONFIG.GEN_F0_VBLANK_HEND {1920} \
+   CONFIG.GEN_F0_VBLANK_HSTART {1920} \
+   CONFIG.GEN_F0_VFRAME_SIZE {1125} \
+   CONFIG.GEN_F0_VSYNC_HEND {1920} \
+   CONFIG.GEN_F0_VSYNC_HSTART {1920} \
+   CONFIG.GEN_F0_VSYNC_VEND {1088} \
+   CONFIG.GEN_F0_VSYNC_VSTART {1083} \
+   CONFIG.GEN_F1_VBLANK_HEND {1920} \
+   CONFIG.GEN_F1_VBLANK_HSTART {1920} \
+   CONFIG.GEN_F1_VFRAME_SIZE {1125} \
+   CONFIG.GEN_F1_VSYNC_HEND {1920} \
+   CONFIG.GEN_F1_VSYNC_HSTART {1920} \
+   CONFIG.GEN_F1_VSYNC_VEND {1088} \
+   CONFIG.GEN_F1_VSYNC_VSTART {1083} \
+   CONFIG.GEN_HACTIVE_SIZE {1920} \
+   CONFIG.GEN_HFRAME_SIZE {2200} \
+   CONFIG.GEN_HSYNC_END {2052} \
+   CONFIG.GEN_HSYNC_START {2008} \
+   CONFIG.GEN_VACTIVE_SIZE {1080} \
+   CONFIG.HAS_AXI4_LITE {false} \
+   CONFIG.VIDEO_MODE {1080p} \
+   CONFIG.enable_detection {false} \
+   CONFIG.horizontal_blank_generation {true} \
+   CONFIG.vertical_blank_generation {true} \
+ ] $v_tc_0
+
+  # Create instance: v_tpg, and set properties
+  set v_tpg [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_tpg:8.0 v_tpg ]
+  set_property -dict [ list \
+   CONFIG.MAX_COLS {2048} \
+   CONFIG.MAX_ROWS {1080} \
+ ] $v_tpg
+
+  # Create instance: xlconstant_1, and set properties
+  set xlconstant_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_1 ]
 
   # Create interface connections
   connect_bd_intf_net -intf_net axi_gpio_0_GPIO [get_bd_intf_ports led] [get_bd_intf_pins axi_gpio_0/GPIO]
@@ -711,16 +793,30 @@ proc create_root_design { parentCell } {
   connect_bd_intf_net -intf_net ps7_axi_periph_M00_AXI [get_bd_intf_pins axi_gpio_0/S_AXI] [get_bd_intf_pins ps7_axi_periph/M00_AXI]
   connect_bd_intf_net -intf_net ps7_axi_periph_M01_AXI [get_bd_intf_pins axi_gpio_1/S_AXI] [get_bd_intf_pins ps7_axi_periph/M01_AXI]
   connect_bd_intf_net -intf_net ps7_axi_periph_M02_AXI [get_bd_intf_pins axi_gpio_2/S_AXI] [get_bd_intf_pins ps7_axi_periph/M02_AXI]
+  connect_bd_intf_net -intf_net ps7_axi_periph_M03_AXI [get_bd_intf_pins ps7_axi_periph/M03_AXI] [get_bd_intf_pins v_tpg/s_axi_CTRL]
+  connect_bd_intf_net -intf_net rgb2dvi_TMDS [get_bd_intf_ports hdmi_tx] [get_bd_intf_pins rgb2dvi/TMDS]
+  connect_bd_intf_net -intf_net v_tc_0_vtiming_out [get_bd_intf_pins v_axi4s_vid_out_0/vtiming_in] [get_bd_intf_pins v_tc_0/vtiming_out]
+  connect_bd_intf_net -intf_net v_tpg_m_axis_video [get_bd_intf_pins v_axi4s_vid_out_0/video_in] [get_bd_intf_pins v_tpg/m_axis_video]
 
   # Create port connections
-  connect_bd_net -net ps7_FCLK_CLK0 [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins axi_gpio_2/s_axi_aclk] [get_bd_pins ps7/FCLK_CLK0] [get_bd_pins ps7/M_AXI_GP0_ACLK] [get_bd_pins ps7_axi_periph/ACLK] [get_bd_pins ps7_axi_periph/M00_ACLK] [get_bd_pins ps7_axi_periph/M01_ACLK] [get_bd_pins ps7_axi_periph/M02_ACLK] [get_bd_pins ps7_axi_periph/S00_ACLK] [get_bd_pins rst_ps7_50M/slowest_sync_clk]
-  connect_bd_net -net ps7_FCLK_RESET0_N [get_bd_pins ps7/FCLK_RESET0_N] [get_bd_pins rst_ps7_50M/ext_reset_in]
-  connect_bd_net -net rst_ps7_50M_peripheral_aresetn [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_gpio_2/s_axi_aresetn] [get_bd_pins ps7_axi_periph/ARESETN] [get_bd_pins ps7_axi_periph/M00_ARESETN] [get_bd_pins ps7_axi_periph/M01_ARESETN] [get_bd_pins ps7_axi_periph/M02_ARESETN] [get_bd_pins ps7_axi_periph/S00_ARESETN] [get_bd_pins rst_ps7_50M/peripheral_aresetn]
+  connect_bd_net -net clk_wiz_0_clk_out1 [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins axi_gpio_2/s_axi_aclk] [get_bd_pins clk_wiz/clk_out1] [get_bd_pins ps7/M_AXI_GP0_ACLK] [get_bd_pins ps7_axi_periph/ACLK] [get_bd_pins ps7_axi_periph/M00_ACLK] [get_bd_pins ps7_axi_periph/M01_ACLK] [get_bd_pins ps7_axi_periph/M02_ACLK] [get_bd_pins ps7_axi_periph/S00_ACLK] [get_bd_pins rst_100M/slowest_sync_clk]
+  connect_bd_net -net clk_wiz_0_clk_out2 [get_bd_pins clk_wiz/clk_out2] [get_bd_pins ps7_axi_periph/M03_ACLK] [get_bd_pins rgb2dvi/PixelClk] [get_bd_pins rst_video/slowest_sync_clk] [get_bd_pins v_axi4s_vid_out_0/aclk] [get_bd_pins v_tc_0/clk] [get_bd_pins v_tpg/ap_clk]
+  connect_bd_net -net proc_sys_reset_0_peripheral_aresetn [get_bd_pins ps7_axi_periph/M03_ARESETN] [get_bd_pins rgb2dvi/aRst_n] [get_bd_pins rst_video/peripheral_aresetn] [get_bd_pins v_axi4s_vid_out_0/aresetn] [get_bd_pins v_tc_0/resetn] [get_bd_pins v_tpg/ap_rst_n]
+  connect_bd_net -net ps7_FCLK_CLK0 [get_bd_pins clk_wiz/clk_in1] [get_bd_pins ps7/FCLK_CLK0]
+  connect_bd_net -net ps7_FCLK_RESET0_N [get_bd_pins clk_wiz/resetn] [get_bd_pins ps7/FCLK_RESET0_N] [get_bd_pins rst_100M/ext_reset_in] [get_bd_pins rst_video/ext_reset_in]
+  connect_bd_net -net rst_ps7_50M_peripheral_aresetn [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_gpio_2/s_axi_aresetn] [get_bd_pins ps7_axi_periph/ARESETN] [get_bd_pins ps7_axi_periph/M00_ARESETN] [get_bd_pins ps7_axi_periph/M01_ARESETN] [get_bd_pins ps7_axi_periph/M02_ARESETN] [get_bd_pins ps7_axi_periph/S00_ARESETN] [get_bd_pins rst_100M/peripheral_aresetn]
+  connect_bd_net -net v_axi4s_vid_out_0_vid_active_video [get_bd_pins rgb2dvi/vid_pVDE] [get_bd_pins v_axi4s_vid_out_0/vid_active_video]
+  connect_bd_net -net v_axi4s_vid_out_0_vid_data [get_bd_pins rgb2dvi/vid_pData] [get_bd_pins v_axi4s_vid_out_0/vid_data]
+  connect_bd_net -net v_axi4s_vid_out_0_vid_hsync [get_bd_pins rgb2dvi/vid_pHSync] [get_bd_pins v_axi4s_vid_out_0/vid_hsync]
+  connect_bd_net -net v_axi4s_vid_out_0_vid_vsync [get_bd_pins rgb2dvi/vid_pVSync] [get_bd_pins v_axi4s_vid_out_0/vid_vsync]
+  connect_bd_net -net v_axi4s_vid_out_0_vtg_ce [get_bd_pins v_axi4s_vid_out_0/vtg_ce] [get_bd_pins v_tc_0/gen_clken]
+  connect_bd_net -net xlconstant_1_dout [get_bd_ports hdmi_tx_hpd] [get_bd_pins xlconstant_1/dout]
 
   # Create address segments
   create_bd_addr_seg -range 0x00010000 -offset 0x41200000 [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_0/S_AXI/Reg] SEG_axi_gpio_0_Reg
   create_bd_addr_seg -range 0x00010000 -offset 0x41210000 [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_1/S_AXI/Reg] SEG_axi_gpio_1_Reg
   create_bd_addr_seg -range 0x00010000 -offset 0x41220000 [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_2/S_AXI/Reg] SEG_axi_gpio_2_Reg
+  create_bd_addr_seg -range 0x00010000 -offset 0x43C00000 [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs v_tpg/s_axi_CTRL/Reg] SEG_v_tpg_Reg
 
 
   # Restore current instance
