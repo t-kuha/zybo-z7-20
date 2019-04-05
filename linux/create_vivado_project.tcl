@@ -15,7 +15,7 @@ add_files -fileset constrs_1 -norecurse ${SRC_DIR}/Zybo-Z7-Master.xdc
 import_files -fileset constrs_1 ${SRC_DIR}/Zybo-Z7-Master.xdc
 
 ## Set IP repository paths
-set IP_REPOS { "vivado-library" }
+set IP_REPOS [ format "vivado-library src/hls" ]
 set_property  ip_repo_paths  ${IP_REPOS}  [current_project]
 update_ip_catalog
 
