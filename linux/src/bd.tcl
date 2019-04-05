@@ -127,6 +127,7 @@ if { $bCheckIPs == 1 } {
 xilinx.com:ip:axi_gpio:2.0\
 xilinx.com:ip:clk_wiz:6.0\
 xilinx.com:ip:processing_system7:5.5\
+xilinx.com:hls:pwm_rgb:1.0\
 digilentinc.com:ip:rgb2dvi:1.4\
 xilinx.com:ip:proc_sys_reset:5.0\
 xilinx.com:ip:v_axi4s_vid_out:4.0\
@@ -198,13 +199,15 @@ proc create_root_design { parentCell } {
   # Create interface ports
   set DDR [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:ddrx_rtl:1.0 DDR ]
   set FIXED_IO [ create_bd_intf_port -mode Master -vlnv xilinx.com:display_processing_system7:fixedio_rtl:1.0 FIXED_IO ]
-  set btn [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 btn ]
+  set btns_4bits [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 btns_4bits ]
   set hdmi_tx [ create_bd_intf_port -mode Master -vlnv digilentinc.com:interface:tmds_rtl:1.0 hdmi_tx ]
-  set led [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 led ]
-  set sw [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 sw ]
+  set leds_4bits [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 leds_4bits ]
+  set sws_4bits [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 sws_4bits ]
 
   # Create ports
   set hdmi_tx_hpd [ create_bd_port -dir O -from 0 -to 0 hdmi_tx_hpd ]
+  set rgb_led_5 [ create_bd_port -dir O -from 2 -to 0 -type data rgb_led_5 ]
+  set rgb_led_6 [ create_bd_port -dir O -from 2 -to 0 -type data rgb_led_6 ]
 
   # Create instance: axi_gpio_0, and set properties
   set axi_gpio_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0 ]
@@ -726,8 +729,14 @@ proc create_root_design { parentCell } {
   # Create instance: ps7_axi_periph, and set properties
   set ps7_axi_periph [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 ps7_axi_periph ]
   set_property -dict [ list \
-   CONFIG.NUM_MI {4} \
+   CONFIG.NUM_MI {6} \
  ] $ps7_axi_periph
+
+  # Create instance: pwm_rgb_0, and set properties
+  set pwm_rgb_0 [ create_bd_cell -type ip -vlnv xilinx.com:hls:pwm_rgb:1.0 pwm_rgb_0 ]
+
+  # Create instance: pwm_rgb_1, and set properties
+  set pwm_rgb_1 [ create_bd_cell -type ip -vlnv xilinx.com:hls:pwm_rgb:1.0 pwm_rgb_1 ]
 
   # Create instance: rgb2dvi, and set properties
   set rgb2dvi [ create_bd_cell -type ip -vlnv digilentinc.com:ip:rgb2dvi:1.4 rgb2dvi ]
@@ -784,27 +793,31 @@ proc create_root_design { parentCell } {
   set xlconstant_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_1 ]
 
   # Create interface connections
-  connect_bd_intf_net -intf_net axi_gpio_0_GPIO [get_bd_intf_ports led] [get_bd_intf_pins axi_gpio_0/GPIO]
-  connect_bd_intf_net -intf_net axi_gpio_1_GPIO [get_bd_intf_ports sw] [get_bd_intf_pins axi_gpio_1/GPIO]
-  connect_bd_intf_net -intf_net axi_gpio_2_GPIO [get_bd_intf_ports btn] [get_bd_intf_pins axi_gpio_2/GPIO]
+  connect_bd_intf_net -intf_net axi_gpio_0_GPIO [get_bd_intf_ports leds_4bits] [get_bd_intf_pins axi_gpio_0/GPIO]
+  connect_bd_intf_net -intf_net axi_gpio_1_GPIO [get_bd_intf_ports sws_4bits] [get_bd_intf_pins axi_gpio_1/GPIO]
+  connect_bd_intf_net -intf_net axi_gpio_2_GPIO [get_bd_intf_ports btns_4bits] [get_bd_intf_pins axi_gpio_2/GPIO]
   connect_bd_intf_net -intf_net processing_system7_0_DDR [get_bd_intf_ports DDR] [get_bd_intf_pins ps7/DDR]
   connect_bd_intf_net -intf_net processing_system7_0_FIXED_IO [get_bd_intf_ports FIXED_IO] [get_bd_intf_pins ps7/FIXED_IO]
   connect_bd_intf_net -intf_net ps7_M_AXI_GP0 [get_bd_intf_pins ps7/M_AXI_GP0] [get_bd_intf_pins ps7_axi_periph/S00_AXI]
   connect_bd_intf_net -intf_net ps7_axi_periph_M00_AXI [get_bd_intf_pins axi_gpio_0/S_AXI] [get_bd_intf_pins ps7_axi_periph/M00_AXI]
   connect_bd_intf_net -intf_net ps7_axi_periph_M01_AXI [get_bd_intf_pins axi_gpio_1/S_AXI] [get_bd_intf_pins ps7_axi_periph/M01_AXI]
   connect_bd_intf_net -intf_net ps7_axi_periph_M02_AXI [get_bd_intf_pins axi_gpio_2/S_AXI] [get_bd_intf_pins ps7_axi_periph/M02_AXI]
-  connect_bd_intf_net -intf_net ps7_axi_periph_M03_AXI [get_bd_intf_pins ps7_axi_periph/M03_AXI] [get_bd_intf_pins v_tpg/s_axi_CTRL]
+  connect_bd_intf_net -intf_net ps7_axi_periph_M03_AXI1 [get_bd_intf_pins ps7_axi_periph/M03_AXI] [get_bd_intf_pins pwm_rgb_0/s_axi_AXIL_CTL]
+  connect_bd_intf_net -intf_net ps7_axi_periph_M04_AXI1 [get_bd_intf_pins ps7_axi_periph/M04_AXI] [get_bd_intf_pins pwm_rgb_1/s_axi_AXIL_CTL]
+  connect_bd_intf_net -intf_net ps7_axi_periph_M05_AXI [get_bd_intf_pins ps7_axi_periph/M05_AXI] [get_bd_intf_pins v_tpg/s_axi_CTRL]
   connect_bd_intf_net -intf_net rgb2dvi_TMDS [get_bd_intf_ports hdmi_tx] [get_bd_intf_pins rgb2dvi/TMDS]
   connect_bd_intf_net -intf_net v_tc_0_vtiming_out [get_bd_intf_pins v_axi4s_vid_out_0/vtiming_in] [get_bd_intf_pins v_tc_0/vtiming_out]
   connect_bd_intf_net -intf_net v_tpg_m_axis_video [get_bd_intf_pins v_axi4s_vid_out_0/video_in] [get_bd_intf_pins v_tpg/m_axis_video]
 
   # Create port connections
-  connect_bd_net -net clk_wiz_0_clk_out1 [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins axi_gpio_2/s_axi_aclk] [get_bd_pins clk_wiz/clk_out1] [get_bd_pins ps7/M_AXI_GP0_ACLK] [get_bd_pins ps7_axi_periph/ACLK] [get_bd_pins ps7_axi_periph/M00_ACLK] [get_bd_pins ps7_axi_periph/M01_ACLK] [get_bd_pins ps7_axi_periph/M02_ACLK] [get_bd_pins ps7_axi_periph/S00_ACLK] [get_bd_pins rst_100M/slowest_sync_clk]
-  connect_bd_net -net clk_wiz_0_clk_out2 [get_bd_pins clk_wiz/clk_out2] [get_bd_pins ps7_axi_periph/M03_ACLK] [get_bd_pins rgb2dvi/PixelClk] [get_bd_pins rst_video/slowest_sync_clk] [get_bd_pins v_axi4s_vid_out_0/aclk] [get_bd_pins v_tc_0/clk] [get_bd_pins v_tpg/ap_clk]
-  connect_bd_net -net proc_sys_reset_0_peripheral_aresetn [get_bd_pins ps7_axi_periph/M03_ARESETN] [get_bd_pins rgb2dvi/aRst_n] [get_bd_pins rst_video/peripheral_aresetn] [get_bd_pins v_axi4s_vid_out_0/aresetn] [get_bd_pins v_tc_0/resetn] [get_bd_pins v_tpg/ap_rst_n]
+  connect_bd_net -net clk_wiz_0_clk_out1 [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins axi_gpio_2/s_axi_aclk] [get_bd_pins clk_wiz/clk_out1] [get_bd_pins ps7/M_AXI_GP0_ACLK] [get_bd_pins ps7_axi_periph/ACLK] [get_bd_pins ps7_axi_periph/M00_ACLK] [get_bd_pins ps7_axi_periph/M01_ACLK] [get_bd_pins ps7_axi_periph/M02_ACLK] [get_bd_pins ps7_axi_periph/M03_ACLK] [get_bd_pins ps7_axi_periph/M04_ACLK] [get_bd_pins ps7_axi_periph/S00_ACLK] [get_bd_pins pwm_rgb_0/ap_clk] [get_bd_pins pwm_rgb_1/ap_clk] [get_bd_pins rst_100M/slowest_sync_clk]
+  connect_bd_net -net clk_wiz_0_clk_out2 [get_bd_pins clk_wiz/clk_out2] [get_bd_pins ps7_axi_periph/M05_ACLK] [get_bd_pins rgb2dvi/PixelClk] [get_bd_pins rst_video/slowest_sync_clk] [get_bd_pins v_axi4s_vid_out_0/aclk] [get_bd_pins v_tc_0/clk] [get_bd_pins v_tpg/ap_clk]
+  connect_bd_net -net proc_sys_reset_0_peripheral_aresetn [get_bd_pins ps7_axi_periph/M05_ARESETN] [get_bd_pins rgb2dvi/aRst_n] [get_bd_pins rst_video/peripheral_aresetn] [get_bd_pins v_axi4s_vid_out_0/aresetn] [get_bd_pins v_tc_0/resetn] [get_bd_pins v_tpg/ap_rst_n]
   connect_bd_net -net ps7_FCLK_CLK0 [get_bd_pins clk_wiz/clk_in1] [get_bd_pins ps7/FCLK_CLK0]
   connect_bd_net -net ps7_FCLK_RESET0_N [get_bd_pins clk_wiz/resetn] [get_bd_pins ps7/FCLK_RESET0_N] [get_bd_pins rst_100M/ext_reset_in] [get_bd_pins rst_video/ext_reset_in]
-  connect_bd_net -net rst_ps7_50M_peripheral_aresetn [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_gpio_2/s_axi_aresetn] [get_bd_pins ps7_axi_periph/ARESETN] [get_bd_pins ps7_axi_periph/M00_ARESETN] [get_bd_pins ps7_axi_periph/M01_ARESETN] [get_bd_pins ps7_axi_periph/M02_ARESETN] [get_bd_pins ps7_axi_periph/S00_ARESETN] [get_bd_pins rst_100M/peripheral_aresetn]
+  connect_bd_net -net pwm_rgb_0_rgb_V [get_bd_ports rgb_led_5] [get_bd_pins pwm_rgb_0/rgb_V]
+  connect_bd_net -net pwm_rgb_1_rgb_V [get_bd_ports rgb_led_6] [get_bd_pins pwm_rgb_1/rgb_V]
+  connect_bd_net -net rst_ps7_50M_peripheral_aresetn [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_gpio_2/s_axi_aresetn] [get_bd_pins ps7_axi_periph/ARESETN] [get_bd_pins ps7_axi_periph/M00_ARESETN] [get_bd_pins ps7_axi_periph/M01_ARESETN] [get_bd_pins ps7_axi_periph/M02_ARESETN] [get_bd_pins ps7_axi_periph/M03_ARESETN] [get_bd_pins ps7_axi_periph/M04_ARESETN] [get_bd_pins ps7_axi_periph/S00_ARESETN] [get_bd_pins pwm_rgb_0/ap_rst_n] [get_bd_pins pwm_rgb_1/ap_rst_n] [get_bd_pins rst_100M/peripheral_aresetn]
   connect_bd_net -net v_axi4s_vid_out_0_vid_active_video [get_bd_pins rgb2dvi/vid_pVDE] [get_bd_pins v_axi4s_vid_out_0/vid_active_video]
   connect_bd_net -net v_axi4s_vid_out_0_vid_data [get_bd_pins rgb2dvi/vid_pData] [get_bd_pins v_axi4s_vid_out_0/vid_data]
   connect_bd_net -net v_axi4s_vid_out_0_vid_hsync [get_bd_pins rgb2dvi/vid_pHSync] [get_bd_pins v_axi4s_vid_out_0/vid_hsync]
@@ -816,6 +829,8 @@ proc create_root_design { parentCell } {
   create_bd_addr_seg -range 0x00010000 -offset 0x41200000 [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_0/S_AXI/Reg] SEG_axi_gpio_0_Reg
   create_bd_addr_seg -range 0x00010000 -offset 0x41210000 [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_1/S_AXI/Reg] SEG_axi_gpio_1_Reg
   create_bd_addr_seg -range 0x00010000 -offset 0x41220000 [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_2/S_AXI/Reg] SEG_axi_gpio_2_Reg
+  create_bd_addr_seg -range 0x00010000 -offset 0x43C10000 [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs pwm_rgb_0/s_axi_AXIL_CTL/Reg] SEG_pwm_rgb_0_Reg
+  create_bd_addr_seg -range 0x00010000 -offset 0x43C20000 [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs pwm_rgb_1/s_axi_AXIL_CTL/Reg] SEG_pwm_rgb_1_Reg
   create_bd_addr_seg -range 0x00010000 -offset 0x43C00000 [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs v_tpg/s_axi_CTRL/Reg] SEG_v_tpg_Reg
 
 
