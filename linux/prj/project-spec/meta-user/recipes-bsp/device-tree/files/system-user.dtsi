@@ -35,6 +35,14 @@
 	usb-phy = <&usb_phy0>;
 };
 
+&pwm_rgb_0 {
+	compatible = "generic-uio";
+};
+
+&pwm_rgb_1 {
+        compatible = "generic-uio";
+};
+
 &v_tpg {
 	compatible = "generic-uio";
 
