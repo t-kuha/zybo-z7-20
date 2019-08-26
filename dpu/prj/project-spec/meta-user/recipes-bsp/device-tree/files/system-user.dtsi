@@ -1,0 +1,35 @@
+/include/ "system-conf.dtsi"
+/ {
+	model = "Zynq Zybo Z7-20 Development Board";
+
+	xlnk {
+		compatible = "xlnx,xlnk-1.0";
+	};
+
+	usb_phy0: usb_phy@0 {
+		compatible = "ulpi-phy";
+		#phy-cells = <0>;
+		reg = <0xe0002000 0x1000>;
+		view-port = <0x0170>;
+		drv-vbus;
+	};
+
+	amba {
+		dpu {
+			compatible = "xilinx,dpu";
+			base-addr = <0x40000000>;
+			dpucore {
+				compatible = "xilinx,dpucore";
+				interrupt-parent = <&intc>;
+				interrupts = <0x0 29 0x4>;
+				core-num = <0x1>;
+			};
+		};
+	};
+};
+
+&usb0 {	
+	dr_mode = "host";
+	usb-phy = <&usb_phy0>;
+};
+
