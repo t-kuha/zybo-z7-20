@@ -208,14 +208,17 @@ proc create_root_design { parentCell } {
   set clk_wiz_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz_0 ]
   set_property -dict [ list \
    CONFIG.CLKOUT1_DRIVES {BUFG} \
-   CONFIG.CLKOUT2_JITTER {192.113} \
+   CONFIG.CLKOUT1_JITTER {142.107} \
+   CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {200.000} \
+   CONFIG.CLKOUT2_JITTER {162.035} \
    CONFIG.CLKOUT2_PHASE_ERROR {164.985} \
-   CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {50} \
+   CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {100.000} \
    CONFIG.CLKOUT2_USED {true} \
    CONFIG.CLK_OUT1_PORT {clk_dsp} \
    CONFIG.CLK_OUT2_PORT {clk_dpu} \
    CONFIG.FEEDBACK_SOURCE {FDBK_AUTO} \
-   CONFIG.MMCM_CLKOUT1_DIVIDE {20} \
+   CONFIG.MMCM_CLKOUT0_DIVIDE_F {5.000} \
+   CONFIG.MMCM_CLKOUT1_DIVIDE {10} \
    CONFIG.MMCM_DIVCLK_DIVIDE {1} \
    CONFIG.NUM_OUT_CLKS {2} \
    CONFIG.RESET_PORT {resetn} \
@@ -225,27 +228,27 @@ proc create_root_design { parentCell } {
   # Create instance: dpu_eu_0, and set properties
   set dpu_eu_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:dpu_eu:3.0 dpu_eu_0 ]
   set_property -dict [ list \
-   CONFIG.ARCH {512} \
-   CONFIG.ARCH_ICP {8} \
-   CONFIG.ARCH_OCP {8} \
+   CONFIG.ARCH {1152} \
+   CONFIG.ARCH_ICP {12} \
+   CONFIG.ARCH_OCP {12} \
    CONFIG.ARCH_PP {4} \
    CONFIG.BANK_IMG_N {8} \
-   CONFIG.BANK_WGT_N {9} \
+   CONFIG.BANK_WGT_N {13} \
    CONFIG.BBANK_IMG_N {8} \
-   CONFIG.BBANK_WGT_N {9} \
+   CONFIG.BBANK_WGT_N {13} \
    CONFIG.CONV_DSP_ACCU_ENA {0} \
-   CONFIG.CONV_DSP_NUM {64} \
+   CONFIG.CONV_DSP_NUM {144} \
    CONFIG.CONV_LEAKYRELU {1} \
    CONFIG.CONV_RELU_ADDON {3} \
-   CONFIG.DNNDK_PRINT {Number of DPU Cores:1;Arch of DPU:B512;RAM Usage:Low;Channel Augmentation:Enabled;DepthWiseConv:Enabled;AveragePool:Enabled;ReLU Type:ReLU + LeakyReLU + ReLU6;Number of SFM cores:0;S-AXI Clock Mode:Independent;dpu_2x Clock Gating:Disabled;DSP48 Maximal Cascade Length:1;DSP48 Usage:Low;Ultra-RAM Use per DPU:0;Enable timestamp auto-update:Enabled;Target Version:1.4.0;AXI Protocol:AXI3;S-AXI Data Width:32;M-AXI GP Data Width:32;M-AXI HP Data Width (DPU):64;M-AXI HP Data Width (SFM):128;M-AXI ID Width:2;DSP Slice Count:78;Ultra-RAM Count:0.0;Block-RAM Count:73.5} \
-   CONFIG.DWCV_DSP_NUM {12} \
+   CONFIG.DNNDK_PRINT {Number of DPU Cores:1;Arch of DPU:B1152;RAM Usage:Low;Channel Augmentation:Enabled;DepthWiseConv:Enabled;AveragePool:Enabled;ReLU Type:ReLU + LeakyReLU + ReLU6;Number of SFM cores:0;S-AXI Clock Mode:Independent;dpu_2x Clock Gating:Disabled;DSP48 Maximal Cascade Length:1;DSP48 Usage:Low;Ultra-RAM Use per DPU:0;Enable timestamp auto-update:Enabled;Target Version:1.4.0;AXI Protocol:AXI3;S-AXI Data Width:32;M-AXI GP Data Width:32;M-AXI HP Data Width (DPU):64;M-AXI HP Data Width (SFM):128;M-AXI ID Width:2;DSP Slice Count:164;Ultra-RAM Count:0.0;Block-RAM Count:123.0} \
+   CONFIG.DWCV_DSP_NUM {18} \
    CONFIG.DWCV_PARALLEL {2} \
-   CONFIG.SUM_BRAM_N {73.5} \
-   CONFIG.SUM_DSP_NUM {78} \
-   CONFIG.TIME_DAY {16} \
-   CONFIG.TIME_HOUR {19} \
+   CONFIG.SUM_BRAM_N {123.0} \
+   CONFIG.SUM_DSP_NUM {164} \
+   CONFIG.TIME_DAY {26} \
+   CONFIG.TIME_HOUR {14} \
    CONFIG.TIME_MONTH {8} \
-   CONFIG.TIME_QUARTER {0} \
+   CONFIG.TIME_QUARTER {1} \
    CONFIG.TIME_YEAR {19} \
  ] $dpu_eu_0
 
