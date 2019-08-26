@@ -5,10 +5,10 @@
 
 ## Prerequisite
 
-- DPU TRD design (190809)
+- DPU TRD design (190809) for DPU IP source
   - Download _zcu102-dpu-trd-2019-1-190809.zip_ from [Xilinx website](https://www.xilinx.com/products/design-tools/ai-inference/ai-developer-hub.html#edge)
 
-- DNNDK (v3.1; 190809)
+- DNNDK (v3.1; 190809) for DPU Kernel module source & runtime library
   - Download _xilinx_dnndk_v3.1_190809.tar.gz_ also from [Xilinx website](https://www.xilinx.com/products/design-tools/ai-inference/ai-developer-hub.html#edge)
 
 - Extract source
@@ -21,7 +21,7 @@ $ cp -R zcu102-dpu-trd-2019-1-timer/pl/srcs/dpu_ip src/_dpu_ip
 # Kernel module
 $ cd zcu102-dpu-trd-2019-1-timer/apu/dpu_petalinux_bsp
 $ petalinux-create -t project -s xilinx-dpu-trd-zcu102-v2019.1.bsp
-$ cp -R zcu102-dpu-trd-2019-1/project-spec/meta-user/recipes-modules/dpu ../../../src
+$ cp -R zcu102-dpu-trd-2019-1/project-spec/meta-user/recipes-modules/dpu ../../../src/_dpu
 
 # Library
 $ tar xf xilinx_dnndk_v3.1_190809.tar.gz
@@ -93,9 +93,12 @@ $ petalinux-package -p ${PRJ_NAME} --boot --format BIN \
 --fpga ${PRJ_NAME}/components/plnx_workspace/device-tree/device-tree/z7_20_wrapper.bit
 ```
 
+## Build application
+
+- For how to build application, see [this document](how-to-create-app.md)
+
 ***
 
 ## Reference
 
 - [DPU for Convolutional Neural Network v3.0 - DPU IP Product Guide](https://www.xilinx.com/support/documentation/ip_documentation/dpu/v3_0/pg338-dpu.pdf)
-- [Device trees of DPU](https://forums.xilinx.com/t5/Deephi-DNNDK/Device-trees-of-DPU/m-p/953420)
