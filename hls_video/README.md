@@ -1,32 +1,48 @@
 # hls_video
 
+- Video processing using Vivado HLS IP
+
 ***
 
 ## How to build the project
 
-- First, build HLS IP:
+### build HLS IP
 
-```bash
+```shell-session
 # In batch mode
 $ vivado_hls -f build_hls_pattern_gen_axis.tcl
 ```
 
-- Extract _hls_petten_gen_axis/solution1/impl/ip/xilinx_com_hls_petten_gen_axis_1_0.zip_ into _hls/ip/petten_gen_axis_
+- Implementation result
 
-- Then, generate Vivado project, SW, and BOOT.bin
+```text
+#=== Post-Implementation Resource usage ===
+SLICE:           48
+LUT:            124
+FF:             111
+DSP:              0
+BRAM:             0
+SRL:              0
+#=== Final timing ===
+CP required:    6.700
+CP achieved post-synthesis:    4.477
+CP achieved post-implementation:    4.840
+Timing met
+```
 
-```bash
-# Get DVI2RGB/RGB2DVI IPs from Digilent's git
+- Extract ``_vhls/solution1/impl/ip/xilinx_com_hls_petten_gen_axis_1_0.zip`` into ``hls/ip/petten_gen_axis``
+
+### Generate Vivado project, SW, and BOOT.bin
+
+```shell-session
+# Get DVI2RGB/RGB2DVI IPs from Digilent's git (commit 18d7d68)
 $ git clone https://github.com/Digilent/vivado-library.git
-$ cd vivado-library
-$ git checkout 69dbafb
-$ cd ..
 
 # Create Vivado project
 $ vivado -mode batch -source create_vivado_project.tcl
 
 # Make SDK app to initialize PS
-$ source create_boot_bin.tcl
+$ xsct create_boot_bin.tcl
 ```
 
 ## Run
