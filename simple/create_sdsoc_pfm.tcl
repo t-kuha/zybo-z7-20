@@ -8,8 +8,6 @@ set SRC_DIR             pfm_files
 set PREBUILT_DIR        ${SRC_DIR}/_prebuilt
 set BOOT_DIR            ${SRC_DIR}/_boot
 set IMG_DIR             ${SRC_DIR}/_image
-# set PREBUILT_DIR        ${SRC_DIR}/_prebuilt
-# set PREBUILT_DATA_DIR   ${SRC_DIR}/prebuilt
 set INIT_PRJ_DIR        _prj_0
 set PLNX_ROOT           petalinux
 
