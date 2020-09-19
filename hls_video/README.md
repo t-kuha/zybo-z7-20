@@ -6,14 +6,19 @@
 
 ## How to build the project
 
-### build HLS IP
+### Generate HLS IP
 
 ```shell-session
-# In batch mode
+# Generate IP
 $ vivado_hls -f build_hls_pattern_gen_axis.tcl
+
+# Extract IP
+$ mkdir -p hls/ip/petten_gen_axis
+$ unzip _vhls/solution1/impl/ip/xilinx_com_hls_petten_gen_axis_1_0.zip \
+-d hls/ip/petten_gen_axis
 ```
 
-- Implementation result
+- Implementation result:
 
 ```text
 #=== Post-Implementation Resource usage ===
@@ -29,8 +34,6 @@ CP achieved post-synthesis:    4.477
 CP achieved post-implementation:    4.840
 Timing met
 ```
-
-- Extract ``_vhls/solution1/impl/ip/xilinx_com_hls_petten_gen_axis_1_0.zip`` into ``hls/ip/petten_gen_axis``
 
 ### Generate Vivado project, SW, and BOOT.bin
 
