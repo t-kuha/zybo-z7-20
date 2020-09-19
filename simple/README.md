@@ -123,6 +123,10 @@ $ petalinux-config --project ${PRJ} -c rootfs
 
 # Add sds_lib
 $ petalinux-create --project ${PRJ} -t apps --template install --name sdslib --enable
+$ rm ${PRJ}/project-spec/meta-user/recipes-apps/sdslib/files/sdslib
+$ cp -R ${XILINX_SDX}/target/aarch32-linux/lib/libsds_lib*.so \
+${PRJ}/project-spec/meta-user/recipes-apps/sdslib/files
+$ cp src/sdslib.bb petalinux/project-spec/meta-user/recipes-apps/sdslib/sdslib.bb
 
 # Build project
 $ petalinux-build --project ${PRJ}
