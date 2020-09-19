@@ -1,4 +1,4 @@
-/* File: /home/imagingtechnerd/zybo-z7-20/simple/_prj_init/_sds/p0/.cf_work/portinfo.h */
+/* File: /home/imagingtechnerd/disk/zybo-z7-20/simple/_prj_0/_sds/p0/.cf_work/portinfo.h */
 #ifndef _SDS_PORTINFO_p_NIL__H
 #define _SDS_PORTINFO_p_NIL__H
 

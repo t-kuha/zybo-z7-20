@@ -1,4 +1,4 @@
-/* File: /home/imagingtechnerd/zybo-z7-20/simple/_prj_init/_sds/p0/.cf_work/portinfo.c */
+/* File: /home/imagingtechnerd/disk/zybo-z7-20/simple/_prj_0/_sds/p0/.cf_work/portinfo.c */
 #include "cf_lib.h"
 #include "cf_request.h"
 #include "accel_info.h"
