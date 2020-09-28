@@ -3946,6 +3946,11 @@ CONFIG_imagefeature-hwcodecs=y
 #
 # user packages 
 #
+CONFIG_opencl-clhpp-dev=y
+CONFIG_opencl-headers-dev=y
+CONFIG_xrt=y
+CONFIG_xrt-dev=y
+CONFIG_zocl=y
 
 #
 # PetaLinux RootFS Settings
