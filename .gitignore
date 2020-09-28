@@ -1,0 +1,14 @@
+# Xilinx files
+**.jou
+**.log
+**.Xil
+sd_card
+
+# Ignore this
+_*
+*.lnk
+*.zip
+*.tar.*
+
+# Workspace
+.vscode
