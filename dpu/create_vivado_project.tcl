@@ -19,7 +19,6 @@ update_ip_catalog
 update_ip_catalog -rebuild
 
 # Create block design
-#source src/u96_dpu_bd.tcl
 source src/bd.tcl
 
 # Set top-level source
