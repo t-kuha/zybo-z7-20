@@ -1,14 +1,14 @@
-**.jou
-**.log
-**.Xil
-**BOOT*.bin
+*.jou
+*.log
+*.Xil
+*BOOT*.bin
 
-**vivado
-**sdk
 _*
+.vscode
 
-**.lnk
-**.zip
+
+*.lnk
+*.zip
 
 # project-specific
 hls_video/vivado-library
