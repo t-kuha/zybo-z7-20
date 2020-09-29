@@ -1,61 +1,44 @@
 # linux
 
-- Large linux rootfs with various libraries
-  - Not RAM disk image
-  - SDSoC capable
-
 ***
 
 ## Build hardware
 
-- Generate bitstream
+```shell-session
+# Get Digilent IP
+$ git clone https://github.com/Digilent/vivado-library.git
 
-```bash
-# This will also create HW definition file (_system.hdf)
+# This will create HW definition file (_system.hdf)
 $ vivado -mode batch -source create_vivado_project.tcl
 ```
 
 ***
 
-## Create PetaLinux project
+## Build PetaLinux
 
-- Create project (usually can be skipped to "petalinux-build")
+```shell-session
+$ export PRJ=petalinux
 
-```bash
-$ export PRJ_NAME=prj
-$ petalinux-create -t project -n ${PRJ_NAME} --template zynq
-$ petalinux-config -p ${PRJ_NAME} --get-hw-description=.
-
-# Kernel config
-$ petalinux-config -p ${PRJ_NAME} -c kernel
-
-# u-boot config
-$ petalinux-config -p ${PRJ_NAME} -c u-boot
-
-# rootfs config
-$ petalinux-config -p ${PRJ_NAME} -c rootfs
-
-# Build
-$ petalinux-build -p ${PRJ_NAME}
+$ petalinux-config -p ${PRJ}
+$ petalinux-build -p ${PRJ}
 
 # Generate SDK (optional)
-$ petalinux-build --sdk -p ${PRJ_NAME}
+$ petalinux-build --sdk -p ${PRJ}
 ```
-
-***
 
 ## Generate BOOT.bin
 
-```bash
+- BOOT.BIN is in ``${PRJ}/images/linux/``
+
+```shell-session
 $ bootgen -arch zynq -image src/boot_bin_linux.bif -w -o BOOT.bin
 # or ...
-$ petalinux-package -p ${PRJ_NAME} --boot --format BIN \
-> --fsbl ${PRJ_NAME}/images/linux/zynq_fsbl.elf \
-> --u-boot ${PRJ_NAME}/images/linux/u-boot.elf \
-> --fpga ${PRJ_NAME}/project-spec/hw-description/z7_20_wrapper.bit
+$ petalinux-package -p ${PRJ} --boot --format BIN \
+--fsbl ${PRJ}/images/linux/zynq_fsbl.elf \
+--u-boot ${PRJ}/images/linux/u-boot.elf \
+--fpga ${PRJ}/project-spec/hw-description/z7_20_wrapper.bit
 # or ...
-# > --fpga _vivado/z7_20.runs/impl_1/z7_20_wrapper.bit
-# BOOT.BIN is in ${PRJ_NAME}/images/linux/
+# --fpga _vivado/z7_20.runs/impl_1/z7_20_wrapper.bit
 ```
 
 ***
@@ -63,18 +46,15 @@ $ petalinux-package -p ${PRJ_NAME} --boot --format BIN \
 ## Run
 
 - Copy BOOT.bin & image.ub into 1st partition of SD card
-
-- Untar rootfs.tar.bz2 (or rootfs.tar.gz) into 2nd partition of SD card
-
 - Power-up the board
 
 ***
 
 ## Simulation in QEMU
 
-```bash
+```shell-session
 # Collect prebuilt image
-$ cd ${PRJ_NAME}
+$ cd ${PRJ}
 $ petalinux-package --prebuilt
 
 # Run Linux Kernel on QEMU
@@ -83,15 +63,35 @@ $ petalinux-boot --qemu --kernel
 
 ***
 
+## Create project from scratch
+
+```shell-session
+$ export PRJ=petalinux
+$ petalinux-create -t project -n ${PRJ} --template zynq
+$ petalinux-config -p ${PRJ} --get-hw-description=.
+
+# Configuration
+$ petalinux-config -p ${PRJ} -c kernel
+$ petalinux-config -p ${PRJ} -c u-boot
+$ petalinux-config -p ${PRJ} -c rootfs
+
+# Build
+$ petalinux-build -p ${PRJ}
+
+# Generate SDK (optional)
+$ petalinux-build -p ${PRJ} --sdk
+```
+
+***
+
 ## Tips
 
 - How to add libsdslib*.so
 
-    ```bash
-    $ petalinux-create -p ${PRJ_NAME} -t apps --template install --name sdslib --enable
-    $ rm ${PRJ_NAME}/project-spec/meta-user/recipes-apps/sdslib/files/sdslib
-    $ cp -R ${XILINX_SDX}/target/aarch32-linux/lib/libsds_lib*.so ${PRJ_NAME}/project-spec/meta-user/recipes-apps/sdslib/files
-
-    # Edit .bb file
-    $ nano ${PRJ_NAME}/project-spec/meta-user/recipes-apps/sdslib/sdslib.bb
-    ```
+```shell-session
+$ petalinux-create -p ${PRJ} -t apps --template install --name sdslib --enable
+$ rm ${PRJ}/project-spec/meta-user/recipes-apps/sdslib/files/sdslib
+$ cp -R ${XILINX_SDX}/target/aarch32-linux/lib/libsds_lib*.so \
+${PRJ}/project-spec/meta-user/recipes-apps/sdslib/files
+$ cp src/sdslib.bb ${PRJ}/project-spec/meta-user/recipes-apps/sdslib/sdslib.bb
+```
