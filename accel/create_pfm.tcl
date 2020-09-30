@@ -2,7 +2,7 @@
 # Create acceleration platform
 #
 
-set PFM_NAME    sz7_20_accel
+set PFM_NAME    z7_20_accel
 set OUT_DIR     _pfm
 set IMG_DIR     _image
 
