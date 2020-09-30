@@ -3946,6 +3946,7 @@ CONFIG_imagefeature-hwcodecs=y
 #
 # user packages 
 #
+CONFIG_fuse-exfat=y
 CONFIG_opencl-clhpp-dev=y
 CONFIG_opencl-headers-dev=y
 CONFIG_xrt=y
